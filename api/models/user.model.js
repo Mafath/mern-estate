@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     username: {
       type:String,
       required:true,
@@ -15,9 +16,12 @@ const userSchema = new mongoose.Schema({
       type:String,
       required:true,
     }
-  }, {timestamps: true}
+  },
+  {timestamps: true}
 );
 
 const User = mongoose.model('User', userSchema);
+//collection name eka singular danna. database ekedi eka plural wenawa automaticallyma
+//User kynne ape model eke nama
 
 export default User;
