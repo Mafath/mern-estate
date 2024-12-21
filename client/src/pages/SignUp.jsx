@@ -4,8 +4,11 @@ import { Link, useNavigate } from 'react-router-dom'
 export default function SignUp() {
 
   const [formData, setFormData] = useState({});
+  //store any error messages if backend returns an error
   const [error, setError] = useState(null);
+  //This tracks whether the form is in the process of submitting, so you can disable the button and show a loading indicator.
   const [loading,setLoading] = useState(false);
+  //This hook is used to navigate to different pages in our app after the form is submitted
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -18,7 +21,7 @@ export default function SignUp() {
   try {
     setLoading(true);
 
-    //let's prepare the data for the backend
+    //Sends a POST request to our backend (/api/auth/signup) with the form data.
     const res = await fetch('/api/auth/signup', {
       method: 'POST',
       headers: {
@@ -26,10 +29,15 @@ export default function SignUp() {
       },
       body: JSON.stringify(formData),//formData object is stringified
     });
+
+    //The response from the backend is converted to JSON
+    //data refers to the result or the response that we get from the backend after sending the request
     const data = await res.json();
     console.log(data);
     
-    if(data.success === false) {
+
+    //If the response indicates an error,
+    if(data.success === false) {//middleware eken output wena 'success' ek gana kynne
       setLoading(false);
       setError(data.message);
       return;
@@ -37,9 +45,10 @@ export default function SignUp() {
     setLoading(false);
     setError(null);
     navigate('/sign-in');
-  } catch (error) {
-      setLoading(false);
-      setError(data.message);    
+  }
+  catch (error) {
+    setLoading(false);
+    setError(data.message);    
   }
   };
 
