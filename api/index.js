@@ -5,7 +5,7 @@ dotenv.config();
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 
-mongoose.connect(process.env.MONGO).then(() => {//database ek hryt conect unada blnna then catch ekk use krnwa
+mongoose.connect(process.env.MONGO).then(() => {//database ek hryt conect unada blnna then catch ekk use krnwa 
   console.log('Connected to MongoDB!');
 }).catch((err) => {
   console.log(err);
