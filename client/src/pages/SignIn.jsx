@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 
 export default function SignIn() {
 
   const [formData, setFormData] = useState({});
-  //store any error messages if backend returns an error
-  const [error, setError] = useState(null);
-  //This tracks whether the form is in the process of submitting, so you can disable the button and show a loading indicator.
-  const [loading,setLoading] = useState(false);
+  const {loading, error} = useSelector((state) => state.user); 
   //This hook is used to navigate to different pages in our app after the form is submitted
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value});
@@ -19,7 +19,7 @@ export default function SignIn() {
     e.preventDefault(); // to prevent refreshing the page when we click sign up
 
   try {
-    setLoading(true);
+    dispatch(signInStart());
 
     //Sends a POST request to our backend (/api/auth/signup) with the form data.
     const res = await fetch('/api/auth/signin', {
@@ -38,17 +38,14 @@ export default function SignIn() {
 
     //If the response indicates an error,
     if(data.success === false) {//middleware eken output wena 'success' ek gana kynne
-      setLoading(false);
-      setError(data.message);
+      dispatch(signInFailure(data.message));
       return;
     }
-    setLoading(false);
-    setError(null);
+    dispatch(signInSuccess(data));
     navigate('/');
   }
   catch (error) {
-    setLoading(false);
-    setError(data.message);    
+    dispatch(signInFailure(error.message));
   }
   };
 
